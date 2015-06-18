@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as builtin
+from accounts import views as accounts_views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', builtin.login, name="login"),
     url(r'^logout/', builtin.logout_then_login, {"login_url": "login"}, name="logout"),
+    url(r'^register/$', accounts_views.register_rater, name="user_register"),
 ]
