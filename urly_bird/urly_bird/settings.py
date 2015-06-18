@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'debug_toolbar',
     'django_extensions',
+    'accounts',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,7 +59,7 @@ ROOT_URLCONF = 'urly_bird.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,3 +112,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+# Bootstrap
+
+BOOTSTRAP3 = {
+
+    # The URL to the jQuery JavaScript file
+    'jquery_url': '/static/jquery-2.1.4.min.js',
+
+    # The Bootstrap base URL
+    'base_url': '/static/bootstrap/',
+
+    # The complete URL to the Bootstrap CSS file (None means no theme)
+    # 'theme_url': '/static/bootstrap/css/slate/bootstrap.min.css',
+    'theme_url': '/static/bootstrap/css/united/bootstrap.min.css',
+
+    # Include jQuery with Bootstrap JavaScript (affects django-bootstrap3 template tags)
+    'include_jquery': True,
+}

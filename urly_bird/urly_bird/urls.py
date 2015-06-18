@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth import views as builtin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', builtin.login, name="login"),
+    url(r'^logout/', builtin.logout_then_login, {"login_url": "login"}, name="logout"),
 ]
