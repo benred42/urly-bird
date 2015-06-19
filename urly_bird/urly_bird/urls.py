@@ -16,11 +16,20 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views as builtin
-from accounts import views as accounts_views
+from accounts import views as account_views
+from links import views as link_views
+from django.views.generic import RedirectView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', RedirectView.as_view(url='/nest/')),
+    url(r'^nest/$', link_views.AllBookmarksList.as_view(), name="all_bookmarks"),
+    url(r'^nest/(?P<user_id>\d+)$', link_views.UserBookmarksList.as_view(), name="user_bookmarks"),
+    url(r'^nest/egg/new/(?P<return_url>.*)?$', link_views.CreateBookmark.as_view(), name="create_bookmark"),
+    url(r'^nest/egg/edit/(?P<pk>\d*)$', link_views.EditBookmark.as_view(), name="edit_bookmark"),
+    url(r'^nest/egg/delete/(?P<pk>\d*)$', link_views.DeleteBookmark.as_view(), name="delete_bookmark"),
+    url(r'^egg/(?P<code>\w+)$', link_views.BookmarkRedirect.as_view(), name='bookmark_redirect'),
     url(r'^login/$', builtin.login, name="login"),
     url(r'^logout/', builtin.logout_then_login, {"login_url": "login"}, name="logout"),
-    url(r'^register/$', accounts_views.register_rater, name="user_register"),
+    url(r'^register/$', account_views.register_rater, name="user_register"),
 ]

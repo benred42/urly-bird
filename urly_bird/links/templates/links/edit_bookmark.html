@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load bootstrap3 %}
 
-</body>
-</html>
+{% block content %}
+    <h2>Change Your Egg?</h2>
+
+    <form method="POST" action="{% url 'edit_bookmark' pk %}">
+        {% csrf_token %}
+        <div class="form-group form-custom">
+            {% bootstrap_form form %}
+        </div>
+        <p>This code will be the unique identifier for your egg link (e.g code="example" egg url="host/egg/example")</p>
+        <!-- Provide a button to click to submit the form. -->
+        <input type="submit" name="submit" class="btn btn-default" value="Edit!"/>
+    </form>
+{% endblock %}

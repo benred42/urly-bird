@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'django_extensions',
     'accounts',
+    'links',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -133,3 +134,5 @@ BOOTSTRAP3 = {
     # Include jQuery with Bootstrap JavaScript (affects django-bootstrap3 template tags)
     'include_jquery': True,
 }
+
+LOGIN_REDIRECT_URL = "/nest/"

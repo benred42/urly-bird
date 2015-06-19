@@ -6,9 +6,12 @@
         <div>
             <div class="{% cycle "odd" "even" %}-row">
                 <p><a href="{% url 'bookmark_redirect' bookmark.code %}">{{ bookmark.title }}</a>
-                    | {{ bookmark.user.username }}</p>
+                    | {{ request.META.HTTP_HOST }}/egg/{{ bookmark.code }}
+                    | <a href="{% url 'user_bookmarks' bookmark.user.id %}">{{ bookmark.user.username }}</a>
+                    | {{ bookmark.timestamp }}</p>
 
-                <p>{{ bookmark.timestamp }}</p>
+                <p>{{ bookmark.description|truncatechars:100 }}</p>
+
             </div>
 
         </div>

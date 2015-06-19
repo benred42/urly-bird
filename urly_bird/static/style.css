@@ -1,3 +1,22 @@
 .form-custom-narrow {
     width: 19%;
 }
+
+.odd-row, .even-row {
+    padding-left: 20px;
+    margin-top: 10px;
+    margin-left: -20px;
+}
+
+.even-row{
+    background-color: transparent;
+}
+
+.odd-row{
+    background: #31b0d5;
+    border-radius: 5px;
+}
+
+p {
+    word-wrap: break-word;
+}

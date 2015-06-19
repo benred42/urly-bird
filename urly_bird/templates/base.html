@@ -10,12 +10,35 @@
     {% bootstrap_messages %}
     <link rel="stylesheet" href="{% static "style.css" %}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url "all_bookmarks" %}">URLyBird</a>
+            </div>
+            <ul class="nav navbar-nav navbar-left">
+                {#                <li class="active"><a href="#">Active</a></li>#}
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'user_bookmarks' request.user.id %}">Home</a></li>
+                    <li><a href="{% url 'create_bookmark' %}?return_url={{ request.get_full_path }}">Lay an Egg?</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.user.is_authenticated %}
+                    <p class="navbar-text">Welcome {{ request.user }}</p>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'user_register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
     <title></title>
 </head>
 <body>
-    {% bootstrap_messages %}
+    <div class="container">
     {% block content %}
     {% endblock %}
+    </div>
 </body>
 </html>

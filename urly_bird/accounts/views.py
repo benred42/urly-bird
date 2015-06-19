@@ -24,7 +24,7 @@ def register_rater(request):
                 messages.SUCCESS,
                 "Welcome, {}. You have successfully created an account and are now logged in".format(user.username))
 
-            return redirect('top20')
+            return redirect("all_bookmarks")
     else:
         user_form = UserForm()
     return render(request, "registration/register.html", {'user_form': user_form})
