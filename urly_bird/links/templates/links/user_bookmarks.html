@@ -9,8 +9,8 @@
                     | {{ request.META.HTTP_HOST }}/egg/{{ bookmark.code }}
                     | {{ bookmark.timestamp }}
                 {% if request.user.is_authenticated and request.user == user %}
-                     | <a href="{% url 'edit_bookmark' bookmark.id %}">Edit</a>
-                     | <a href="{% url 'delete_bookmark' bookmark.id %}">Delete</a>
+                     | <a href="{% url 'edit_bookmark' bookmark.id %}?return_url={{ request.get_full_path }}">Edit</a>
+                     | <a href="{% url 'delete_bookmark' bookmark.id %}?return_url={{ request.get_full_path }}">Delete</a>
                     {% endif %}
                 </p>
 

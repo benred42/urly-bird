@@ -90,12 +90,15 @@ class EditBookmark(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs["pk"]
         context["pk"] = pk
+        return_url = self.request.GET['return_url']
+        context["return_url"] = return_url
         return context
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
                              "Your bookmark has been successfully updated!")
-        return reverse("all_bookmarks")
+        return_url = self.request.GET.get('return_url', '')
+        return return_url
 
 
 class DeleteBookmark(LoginRequiredMixin, DeleteView):
@@ -106,9 +109,12 @@ class DeleteBookmark(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs["pk"]
         context["pk"] = pk
+        return_url = self.request.GET['return_url']
+        context["return_url"] = return_url
         return context
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
                              "Your bookmark has been successfully deleted!")
-        return reverse("all_bookmarks")
+        return_url = self.request.GET.get('return_url', '')
+        return return_url

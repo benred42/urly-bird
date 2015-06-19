@@ -4,7 +4,7 @@
 {% block content %}
     <h2>Delete Your Egg?</h2>
 
-    <form method="POST" action="{% url 'delete_bookmark' pk %}">
+    <form method="POST" action="{% url 'delete_bookmark' pk %}?return_url={{ return_url }}">
         {% csrf_token %}
         <!-- Provide a button to click to submit the form. -->
         <input type="submit" name="submit" class="btn btn-default" value="Delete Forever"/>

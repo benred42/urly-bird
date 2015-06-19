@@ -4,7 +4,7 @@
 {% block content %}
     <h2>Change Your Egg?</h2>
 
-    <form method="POST" action="{% url 'edit_bookmark' pk %}">
+    <form method="POST" action="{% url 'edit_bookmark' pk %}?return_url={{ return_url }}">
         {% csrf_token %}
         <div class="form-group form-custom">
             {% bootstrap_form form %}
