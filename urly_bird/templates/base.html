@@ -10,7 +10,7 @@
     {% bootstrap_messages %}
     <link rel="stylesheet" href="{% static "style.css" %}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="{% url "all_bookmarks" %}">URLyBird</a>
@@ -19,7 +19,8 @@
                 {#                <li class="active"><a href="#">Active</a></li>#}
                 {% if request.user.is_authenticated %}
                     <li><a href="{% url 'user_bookmarks' request.user.id %}">Home</a></li>
-                    <li><a href="{% url 'create_bookmark' %}?return_url={{ request.get_full_path }}">Lay an Egg?</a></li>
+                    <li><a href="{% url 'create_bookmark' %}?return_url={{ request.get_full_path }}">Lay an Egg?</a>
+                    </li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -35,10 +36,10 @@
     </nav>
     <title></title>
 </head>
-<body>
-    <div class="container">
+<body class="backdrop">
+<div class="container">
     {% block content %}
     {% endblock %}
-    </div>
+</div>
 </body>
 </html>
