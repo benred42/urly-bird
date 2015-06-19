@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+    <h1>Welcome to URLyBird!</h1>
+    {% for bookmark in bookmarks %}
+        <div>
+            <div class="{% cycle "odd" "even" %}-row">
+                <p><a href="{% url 'bookmark_redirect' bookmark.code %}">{{ bookmark.title }}</a>
+                    | {{ bookmark.user.username }}</p>
+
+                <p>{{ bookmark.timestamp }}</p>
+            </div>
+
+        </div>
+    {% endfor %}
+    {% if paginator.num_pages > 1 %}
+        {% bootstrap_pagination page_obj %}
+    {% endif %}
+{% endblock %}
