@@ -1,10 +1,12 @@
+from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.http import HttpResponse
+from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, RedirectView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, RedirectView, CreateView, UpdateView, DeleteView, TemplateView
 from links.forms import BookmarkForm, EditBookmarkForm
 from links.models import Bookmark, Click
 from django.utils import timezone
@@ -118,3 +120,45 @@ class DeleteBookmark(LoginRequiredMixin, DeleteView):
                              "Your bookmark has been successfully deleted!")
         return_url = self.request.GET.get('return_url', '')
         return return_url
+
+
+class BookmarkStats(TemplateView):
+    template_name = "links/bookmark_stats.html"
+    context_object_name = "bookmarks"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        bookmark_id = self.kwargs["bookmark_id"]
+        context['bookmark'] = get_object_or_404(Bookmark, pk=bookmark_id)
+        return context
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib
+
+matplotlib.style.use('ggplot')
+
+
+def bookmark_chart(request, bookmark_id):
+    clicks = Click.objects.filter(bookmark__id=bookmark_id).filter(timestamp__gte=timezone.now()-timedelta(days=30))
+    df = pd.DataFrame(model_to_dict(click) for click in clicks)
+    df.index = df['timestamp']
+    df['count'] = 1
+    counts = df['count']
+    counts = counts.sort_index()
+    series = counts.resample('D', how=sum, fill_method='pad')
+    response = HttpResponse(content_type='image/png')
+
+    fig = plt.figure(figsize=(10, 4))
+    fig.patch.set_alpha(0)
+    plt.plot(series.index, series.values)
+    ymin, ymax = plt.ylim()
+    plt.ylim((ymin-1), (ymax+1))
+    plt.xticks(size=7)
+    plt.xlabel("")
+    plt.ylabel("Number of Clicks")
+    canvas = FigureCanvas(fig)
+    canvas.print_png(response)
+    return response

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Clicks per Day over the Past 30 Days for {{ bookmark.title }}</h1>
+    <div>
+        <img src="{% url "bookmark_chart" bookmark.id %}">
+    </div>
+{% endblock %}

@@ -5,8 +5,8 @@
     {% for bookmark in bookmarks %}
         <div>
             <div class="{% cycle "odd" "even" %}-row">
-                <p><a href="{% url 'bookmark_redirect' bookmark.code %}">{{ bookmark.title }}</a>
-                    | {{ request.META.HTTP_HOST }}/egg/{{ bookmark.code }}
+                <p><a href="{% url 'bookmark_stats' bookmark.id %}">{{ bookmark.title }}</a>
+                    | <a href="{% url 'bookmark_redirect' bookmark.code %}">{{ request.META.HTTP_HOST }}/egg/{{ bookmark.code }}</a>
                     | <a href="{% url 'user_bookmarks' bookmark.user.id %}">{{ bookmark.user.username }}</a>
                     | {{ bookmark.timestamp }}</p>
 
