@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.http import HttpResponse
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404
@@ -133,6 +134,15 @@ class BookmarkStats(TemplateView):
         return context
 
 
+class UserStats(ListView):
+    template_name = "links/user_stats.html"
+    context_object_name = "bookmarks"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Bookmark.objects.filter(user=self.request.user).annotate(num=Count('click')).order_by('-num')
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -143,6 +153,29 @@ matplotlib.style.use('ggplot')
 
 def bookmark_chart(request, bookmark_id):
     clicks = Click.objects.filter(bookmark__id=bookmark_id).filter(timestamp__gte=timezone.now()-timedelta(days=30))
+    df = pd.DataFrame(model_to_dict(click) for click in clicks)
+    df.index = df['timestamp']
+    df['count'] = 1
+    counts = df['count']
+    counts = counts.sort_index()
+    series = counts.resample('D', how=sum, fill_method='pad')
+    response = HttpResponse(content_type='image/png')
+
+    fig = plt.figure(figsize=(10, 4))
+    fig.patch.set_alpha(0)
+    plt.plot(series.index, series.values)
+    ymin, ymax = plt.ylim()
+    plt.ylim((ymin-1), (ymax+1))
+    plt.xticks(size=7)
+    plt.xlabel("")
+    plt.ylabel("Number of Clicks")
+    canvas = FigureCanvas(fig)
+    canvas.print_png(response)
+    return response
+
+
+def user_chart(request):
+    clicks = Click.objects.filter(user=request.user).filter(timestamp__gte=timezone.now()-timedelta(days=30))
     df = pd.DataFrame(model_to_dict(click) for click in clicks)
     df.index = df['timestamp']
     df['count'] = 1

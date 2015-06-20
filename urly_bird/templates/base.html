@@ -19,6 +19,7 @@
                 {#                <li class="active"><a href="#">Active</a></li>#}
                 {% if request.user.is_authenticated %}
                     <li><a href="{% url 'user_bookmarks' request.user.id %}">Home</a></li>
+                    <li><a href="{% url 'user_stats' %}">Stats</a></li>
                     <li><a href="{% url 'create_bookmark' %}?return_url={{ request.get_full_path }}">Lay an Egg?</a>
                     </li>
                 {% endif %}

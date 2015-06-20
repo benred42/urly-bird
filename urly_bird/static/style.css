@@ -29,6 +29,16 @@
     background-position: center;
 }
 
+.table-custom {
+    width: 60%;
+    background-color: #FFFFFF;
+    opacity: 0.9;
+}
+
+.chart {
+    margin-left: -50px;
+}
+
 p {
     word-wrap: break-word;
 }
