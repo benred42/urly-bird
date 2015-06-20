@@ -39,6 +39,11 @@
     margin-left: -50px;
 }
 
+.block-header {
+    background-color: #FFFFFF;
+    opacity: 0.9;
+}
+
 p {
     word-wrap: break-word;
 }

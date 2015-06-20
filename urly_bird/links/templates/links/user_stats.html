@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 {% block content %}
-        <h1>Traffic Stats for {{ request.user.username }}</h1>
-        <h3>Clicks per Day over the Past 30 Days</h3>
+    <h1 class="block-header">Traffic Stats for {{ request.user.username }}</h1>
+    <h3>Clicks per Day over the Past 30 Days</h3>
     <div>
         <img class="chart" src="{% url "user_chart" %}">
     </div>
@@ -15,13 +15,17 @@
             </tr>
             {% for bookmark in bookmarks %}
                 <tr>
-                    <td><a href="{% url 'bookmark_stats' bookmark.id %}"><strong>{{ bookmark.title }}</strong></a></td>
+                    <td><a href="{% url 'bookmark_stats' bookmark.id %}"><strong>{{ bookmark.title }}</strong></a>
+                        |
+                        <a href="{% url 'bookmark_redirect' bookmark.code %}">
+                            {{ request.META.HTTP_HOST }}/egg/{{ bookmark.code }}</a>
+                    </td>
                     <td>{{ bookmark.num }}</td>
                 </tr>
             {% endfor %}
         </table>
     </div>
-        {% if paginator.num_pages > 1 %}
+    {% if paginator.num_pages > 1 %}
         {% bootstrap_pagination page_obj %}
     {% endif %}
 {% endblock %}
