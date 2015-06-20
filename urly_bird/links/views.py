@@ -134,7 +134,7 @@ class BookmarkStats(TemplateView):
         return context
 
 
-class UserStats(ListView):
+class UserStats(LoginRequiredMixin, ListView):
     template_name = "links/user_stats.html"
     context_object_name = "bookmarks"
     paginate_by = 10
