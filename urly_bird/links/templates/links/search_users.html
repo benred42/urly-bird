@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block content %}
+    <h2>Search Results</h2>
+    {% if results_users %}
+    {% for user in results_users %}
+            <div class="{% cycle "odd" "even" %}-row">
+                <p><a href="{% url 'user_bookmarks' user.id %}">{{ user.username }}</a></p>
+            </div>
+    {% endfor %}
+    {% else %}
+        <p>No Results!</p>
+    {% endif %}
+        {% if paginator.num_pages > 1 %}
+        {% bootstrap_pagination results_bookmarks.page %}
+    {% endif %}
+{% endblock %}

@@ -1,17 +1,20 @@
 from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponse
 from django.forms import model_to_dict
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, RedirectView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, RedirectView, CreateView, UpdateView, DeleteView, TemplateView, View
 from links.forms import BookmarkForm, EditBookmarkForm
 from links.models import Bookmark, Click
 from django.utils import timezone
 from hashids import Hashids
+
 
 # Create your views here.
 class LoginRequiredMixin(object):
@@ -50,9 +53,14 @@ class BookmarkRedirect(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         bookmark = get_object_or_404(Bookmark, code=kwargs['code'])
-        click = Click(user=self.request.user,
-                      bookmark=bookmark,
-                      timestamp=timezone.now())
+        if not self.request.user.is_anonymous():
+            click = Click(user=self.request.user,
+                          bookmark=bookmark,
+                          timestamp=timezone.now())
+        else:
+            click = Click(user=User.objects.get(pk=103),
+                          bookmark=bookmark,
+                          timestamp=timezone.now())
         click.save()
         return bookmark.url
 
@@ -143,6 +151,36 @@ class UserStats(LoginRequiredMixin, ListView):
         return Bookmark.objects.filter(user=self.request.user).annotate(num=Count('click')).order_by('-num')
 
 
+class SearchBookmarks(View):
+    def post(self, request):
+        if request.method == "POST":
+            search_input = request.POST.get('search_bookmarks')
+            results = Bookmark.objects.all()
+            if search_input:
+                results_bookmarks = results.filter(title__icontains=search_input)
+                return render(request,
+                              'links/search_bookmarks.html',
+                              {'results_bookmarks': results_bookmarks})
+        return render(request,
+                      'links/search_bookmarks.html',
+                      {'results_bookmarks': None})
+
+
+class SearchUsers(View):
+    def post(self, request):
+        if request.method == "POST":
+            search_input = request.POST.get('search_users')
+            results = User.objects.all()
+            if search_input:
+                results_users = results.filter(username__icontains=search_input)
+                return render(request,
+                              'links/search_users.html',
+                              {'results_users': results_users})
+        return render(request,
+                      'links/search_users.html',
+                      {'results_users': None})
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -152,7 +190,7 @@ matplotlib.style.use('ggplot')
 
 
 def bookmark_chart(request, bookmark_id):
-    clicks = Click.objects.filter(bookmark__id=bookmark_id).filter(timestamp__gte=timezone.now()-timedelta(days=30))
+    clicks = Click.objects.filter(bookmark__id=bookmark_id).filter(timestamp__gte=timezone.now() - timedelta(days=30))
     df = pd.DataFrame(model_to_dict(click) for click in clicks)
     df.index = df['timestamp']
     df['count'] = 1
@@ -165,7 +203,7 @@ def bookmark_chart(request, bookmark_id):
     fig.patch.set_alpha(0)
     plt.plot(series.index, series.values)
     ymin, ymax = plt.ylim()
-    plt.ylim((ymin-1), (ymax+1))
+    plt.ylim((ymin - 1), (ymax + 1))
     plt.xticks(size=7)
     plt.xlabel("")
     plt.ylabel("Number of Clicks")
@@ -175,7 +213,7 @@ def bookmark_chart(request, bookmark_id):
 
 
 def user_chart(request):
-    clicks = Click.objects.filter(user=request.user).filter(timestamp__gte=timezone.now()-timedelta(days=30))
+    clicks = Click.objects.filter(user=request.user).filter(timestamp__gte=timezone.now() - timedelta(days=30))
     df = pd.DataFrame(model_to_dict(click) for click in clicks)
     df.index = df['timestamp']
     df['count'] = 1
@@ -188,7 +226,7 @@ def user_chart(request):
     fig.patch.set_alpha(0)
     plt.plot(series.index, series.values)
     ymin, ymax = plt.ylim()
-    plt.ylim((ymin-1), (ymax+1))
+    plt.ylim((ymin - 1), (ymax + 1))
     plt.xticks(size=7)
     plt.xlabel("")
     plt.ylabel("Number of Clicks")

@@ -37,4 +37,6 @@ urlpatterns = [
     url(r'^login/$', builtin.login, name="login"),
     url(r'^logout/', builtin.logout_then_login, {"login_url": "login"}, name="logout"),
     url(r'^register/$', account_views.register_rater, name="user_register"),
+    url(r'^results/eggs/$', link_views.SearchBookmarks.as_view(), name="search_bookmarks"),
+    url(r'^results/birds/$', link_views.SearchUsers.as_view(), name="search_users"),
 ]

@@ -20,7 +20,7 @@ class Bookmark(models.Model):
 #######################################################################################################################
 
 class Click(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True, blank=True)
     bookmark = models.ForeignKey(Bookmark)
     timestamp = models.DateTimeField()
 
