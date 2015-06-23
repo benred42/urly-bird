@@ -18,7 +18,12 @@ from django.contrib import admin
 from django.contrib.auth import views as builtin
 from accounts import views as account_views
 from links import views as link_views
+from api import views as api_views
 from django.views.generic import RedirectView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'bookmarks', api_views.BookmarkViewSet)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -39,4 +44,6 @@ urlpatterns = [
     url(r'^register/$', account_views.register_rater, name="user_register"),
     url(r'^results/eggs/$', link_views.SearchBookmarks.as_view(), name="search_bookmarks"),
     url(r'^results/birds/$', link_views.SearchUsers.as_view(), name="search_users"),
+    url(r'^api/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
