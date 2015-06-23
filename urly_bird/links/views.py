@@ -61,7 +61,7 @@ class BookmarkRedirect(RedirectView):
                           bookmark=bookmark,
                           timestamp=timezone.now())
         click.save()
-        return bookmark.URL
+        return bookmark.url
 
 
 class CreateBookmark(LoginRequiredMixin, CreateView):

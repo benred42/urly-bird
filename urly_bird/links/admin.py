@@ -2,7 +2,7 @@ from django.contrib import admin
 from links.models import Bookmark, Click
 
 class BookmarkAdmin(admin.ModelAdmin):
-    list_display = ["id", "title", "description", "URL", "code", "timestamp", "user"]
+    list_display = ["id", "title", "description", "url", "code", "timestamp", "user"]
 
 class ClickAdmin(admin.ModelAdmin):
     list_display = ["timestamp", "bookmark"]

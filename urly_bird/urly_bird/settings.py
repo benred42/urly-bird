@@ -138,3 +138,8 @@ BOOTSTRAP3 = {
 }
 
 LOGIN_REDIRECT_URL = "/nest/"
+
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'
+}

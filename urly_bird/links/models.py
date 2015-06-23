@@ -6,11 +6,11 @@ from django.utils import timezone
 
 
 class Bookmark(models.Model):
-    URL = models.URLField(max_length=255)
-    code = models.CharField(max_length=255, unique=True)
+    url = models.URLField(max_length=255)
+    code = models.CharField(max_length=255, unique=True, null=True)
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User)
 
     def __str__(self):
@@ -22,7 +22,7 @@ class Bookmark(models.Model):
 class Click(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     bookmark = models.ForeignKey(Bookmark)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str("{}: {}".format(self.user.id, self.timestamp))
