@@ -6,7 +6,7 @@ from django.utils import timezone
 
 
 class Bookmark(models.Model):
-    url = models.URLField(max_length=255)
+    URL = models.URLField(max_length=255)
     code = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
@@ -34,8 +34,9 @@ import random
 fake = Faker()
 
 
+"""These functions create objects for development only, do not run"""
+
 def make_users():
-    """Creates user objects for development only, do not run"""
     for index in range(100):
         user_name = fake.user_name()
         User.objects.create_user(username=user_name,

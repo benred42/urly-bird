@@ -12,6 +12,6 @@
         <p>No Results!</p>
     {% endif %}
         {% if paginator.num_pages > 1 %}
-        {% bootstrap_pagination results_bookmarks.page %}
+        {% bootstrap_pagination page_obj %}
     {% endif %}
 {% endblock %}

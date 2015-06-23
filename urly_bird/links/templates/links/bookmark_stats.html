@@ -5,4 +5,6 @@
     <div>
         <img src="{% url "bookmark_chart" bookmark.id %}">
     </div>
+    <h4>Description</h4>
+    <p class="even-row">{{ bookmark.description }}</p>
 {% endblock %}

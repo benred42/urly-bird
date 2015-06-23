@@ -1,15 +1,14 @@
 from datetime import timedelta
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponse
 from django.forms import model_to_dict
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, RedirectView, CreateView, UpdateView, DeleteView, TemplateView, View
+from django.views.generic.list import MultipleObjectMixin
 from links.forms import BookmarkForm, EditBookmarkForm
 from links.models import Bookmark, Click
 from django.utils import timezone
@@ -27,7 +26,7 @@ class AllBookmarksList(ListView):
     model = Bookmark
     context_object_name = "bookmarks"
     template_name = "links/all_bookmarks.html"
-    queryset = Bookmark.objects.all().order_by("-timestamp")
+    queryset = Bookmark.objects.all().order_by("-timestamp").select_related()
     paginate_by = 20
 
 
@@ -62,7 +61,7 @@ class BookmarkRedirect(RedirectView):
                           bookmark=bookmark,
                           timestamp=timezone.now())
         click.save()
-        return bookmark.url
+        return bookmark.URL
 
 
 class CreateBookmark(LoginRequiredMixin, CreateView):
@@ -151,35 +150,43 @@ class UserStats(LoginRequiredMixin, ListView):
         return Bookmark.objects.filter(user=self.request.user).annotate(num=Count('click')).order_by('-num')
 
 
-class SearchBookmarks(View):
-    def post(self, request):
-        if request.method == "POST":
-            search_input = request.POST.get('search_bookmarks')
-            results = Bookmark.objects.all()
-            if search_input:
-                results_bookmarks = results.filter(title__icontains=search_input)
-                return render(request,
-                              'links/search_bookmarks.html',
-                              {'results_bookmarks': results_bookmarks})
-        return render(request,
-                      'links/search_bookmarks.html',
-                      {'results_bookmarks': None})
+class SearchBookmarks(ListView):
+    model = Bookmark
+    template_name = 'links/search_bookmarks.html'
+    context_object_name = "results_bookmarks"
+    paginate_by = 10
+
+    def get_queryset(self):
+        search_input = self.request.GET.get('search_bookmarks')
+        return Bookmark.objects.all().filter(title__icontains=search_input)
 
 
-class SearchUsers(View):
-    def post(self, request):
-        if request.method == "POST":
-            search_input = request.POST.get('search_users')
-            results = User.objects.all()
-            if search_input:
-                results_users = results.filter(username__icontains=search_input)
-                return render(request,
-                              'links/search_users.html',
-                              {'results_users': results_users})
-        return render(request,
-                      'links/search_users.html',
-                      {'results_users': None})
+class SearchUsers(ListView):
+    model = User
+    template_name = 'links/search_users.html'
+    context_object_name = "results_users"
+    paginate_by = 10
 
+    def get_queryset(self):
+        search_input = self.request.GET.get('search_users')
+        return User.objects.all().filter(username__icontains=search_input)
+
+
+# class SearchUsers(View):
+#     def post(self, request):
+#         if request.method == "POST":
+#             search_input = request.POST.get('search_users')
+#             results = User.objects.all()
+#             if search_input:
+#                 results_users = results.filter(username__icontains=search_input)
+#                 return render(request,
+#                               'links/search_users.html',
+#                               {'results_users': results_users})
+#         return render(request,
+#                       'links/search_users.html',
+#                       {'results_users': None})
+
+#######################################################################################################################
 
 import pandas as pd
 import matplotlib.pyplot as plt
