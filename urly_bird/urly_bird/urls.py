@@ -24,6 +24,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'bookmarks', api_views.BookmarkViewSet)
+router.register(r'user', api_views.UserViewSet, base_name="user")
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),

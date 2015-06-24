@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.utils import timezone
 from links.models import Bookmark, Click
 from rest_framework import serializers
@@ -17,11 +18,11 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     api_url = serializers.HyperlinkedIdentityField(view_name='bookmark-detail')
     code = serializers.SerializerMethodField()
-    clicks = serializers.IntegerField(source='num_clicks', read_only=True)
+    click_number = serializers.IntegerField(source='num_clicks', read_only=True)
 
     class Meta:
         model = Bookmark
-        fields = ('id', 'api_url', 'code', 'url', 'title', 'description', 'timestamp', 'user', 'clicks')
+        fields = ('id', 'api_url', 'code', 'url', 'title', 'description', 'timestamp', 'user', 'click_number')
 
     def get_code(self, obj):
         return obj.code
@@ -34,4 +35,12 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
         bookmark.save()
         return bookmark
 
+#######################################################################################################################
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    total_clicks = serializers.IntegerField(source='num_clicks', read_only=True)
+    bookmark_set = BookmarkSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'url', 'username', 'email', 'total_clicks', 'bookmark_set')
