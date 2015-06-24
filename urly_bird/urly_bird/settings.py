@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'debug_toolbar',
     'django_extensions',
+    'django_filters',
     'rest_framework',
     'accounts',
     'links',
@@ -141,5 +142,6 @@ LOGIN_REDIRECT_URL = "/nest/"
 
 # Rest Framework
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination'
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
 }

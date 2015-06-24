@@ -47,5 +47,5 @@ urlpatterns = [
     url(r'^results/birds/$', link_views.SearchUsers.as_view(), name="search_users"),
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/bookmarks/(?P<bookmark_id>\d+)/click', api_views.ClickView.as_view(), name="create_click")
+    url(r'^api/bookmarks/(?P<bookmark_id>\d+)/clicks', api_views.ClickView.as_view(), name="create_click")
 ]

@@ -33,8 +33,8 @@ import random
 
 fake = Faker()
 
-
 """These functions create objects for development only, do not run"""
+
 
 def make_users():
     for index in range(100):
