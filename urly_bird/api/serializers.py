@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.utils import timezone
 from links.models import Bookmark, Click
 from rest_framework import serializers
 from hashids import Hashids
@@ -21,6 +22,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     api_url = serializers.HyperlinkedIdentityField(view_name='bookmark-detail')
     code = serializers.SerializerMethodField()
+    timestamp = serializers.DateTimeField(default=timezone.now)
     click_number = serializers.IntegerField(source='num_clicks', read_only=True)
     click_count = serializers.SerializerMethodField()
     _links = serializers.SerializerMethodField()
