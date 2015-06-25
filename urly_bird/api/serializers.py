@@ -17,7 +17,7 @@ class ClickSerializer(serializers.ModelSerializer):
         model = Click
 
     def create(self, validated_data):
-        """Automatically sets the short url code and the timestamp for a bookmark."""
+        """Automatically sets the timestamp for a bookmark."""
         click = Click.objects.create(**validated_data)
         click.timestamp = timezone.now()
         click.save()

@@ -22,7 +22,7 @@ class BookmarkViewSet(viewsets.ModelViewSet):
     title=your+title+search
     description=your+description+search
     user=your+user+id+search
-    Example: http://host/api/bookmarks/?title=nest&description=bird+home"""
+    Example: http://host/api/bookmarks/?title=nest&description=birds+live"""
     queryset = Bookmark.objects.all().annotate(num_clicks=Count('click'))
     serializer_class = BookmarkSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
