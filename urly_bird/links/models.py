@@ -10,7 +10,7 @@ class Bookmark(models.Model):
     code = models.CharField(max_length=255, unique=True, null=True)
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    timestamp = models.DateTimeField(default=timezone.now)
+    timestamp = models.DateTimeField(default=timezone.now())
     user = models.ForeignKey(User)
 
     def __str__(self):
@@ -22,7 +22,14 @@ class Bookmark(models.Model):
 class Click(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
     bookmark = models.ForeignKey(Bookmark)
-    timestamp = models.DateTimeField(default=timezone.now)
+    timestamp = models.DateTimeField(default=timezone.now())
+
+    # def to_dict(self):
+    #     model_dict = {'user': self.user,
+    #                   'bookmark': self.bookmark,
+    #                   'timestamp': self.timestamp
+    #                   }
+    #     return model_dict
 
     def __str__(self):
         return str("{}: {}".format(self.user.id, self.timestamp))

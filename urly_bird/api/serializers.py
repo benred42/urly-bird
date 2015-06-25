@@ -22,7 +22,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     api_url = serializers.HyperlinkedIdentityField(view_name='bookmark-detail')
     code = serializers.SerializerMethodField()
-    timestamp = serializers.DateTimeField(default=timezone.now)
+    timestamp = serializers.SerializerMethodField()
     click_number = serializers.IntegerField(source='num_clicks', read_only=True)
     click_count = serializers.SerializerMethodField()
     _links = serializers.SerializerMethodField()
@@ -35,6 +35,9 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_code(self, obj):
         return obj.code
+
+    def get_timestamp(self, obj):
+        return obj.timestamp
 
     def get__links(self, obj):
         links = {
@@ -51,6 +54,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
         hashids = Hashids(salt="Hopefully the URLyBird does not get any worms")
         code = hashids.encode(bookmark.id)
         bookmark.code = code
+        bookmark.timestamp = timezone.now()
         bookmark.save()
         return bookmark
 

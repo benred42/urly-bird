@@ -199,6 +199,7 @@ matplotlib.style.use('ggplot')
 def bookmark_chart(request, bookmark_id):
     clicks = Click.objects.filter(bookmark__id=bookmark_id).filter(timestamp__gte=timezone.now() - timedelta(days=30))
     df = pd.DataFrame(model_to_dict(click) for click in clicks)
+    # df = pd.DataFrame(click.to_dict() for click in clicks)
     df.index = df['timestamp']
     df['count'] = 1
     counts = df['count']
@@ -222,6 +223,7 @@ def bookmark_chart(request, bookmark_id):
 def user_chart(request):
     clicks = Click.objects.filter(user=request.user).filter(timestamp__gte=timezone.now() - timedelta(days=30))
     df = pd.DataFrame(model_to_dict(click) for click in clicks)
+    # df = pd.DataFrame(click.to_dict() for click in clicks)
     df.index = df['timestamp']
     df['count'] = 1
     counts = df['count']
