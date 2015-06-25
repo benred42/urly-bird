@@ -18,6 +18,11 @@ class BookmarkFilter(django_filters.FilterSet):
 
 
 class BookmarkViewSet(viewsets.ModelViewSet):
+    """Add the following search terms to the url to filter results:
+    title=your+title+search
+    description=your+description+search
+    user=your+user+id+search
+    Example: http://host/api/bookmarks/?title=nest&description=bird+home"""
     queryset = Bookmark.objects.all().annotate(num_clicks=Count('click'))
     serializer_class = BookmarkSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,

@@ -11,9 +11,20 @@ from rest_framework.reverse import reverse
 class ClickSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     bookmark = serializers.PrimaryKeyRelatedField(read_only=True)
+    timestamp = serializers.SerializerMethodField()
 
     class Meta:
         model = Click
+
+    def create(self, validated_data):
+        """Automatically sets the short url code and the timestamp for a bookmark."""
+        click = Click.objects.create(**validated_data)
+        click.timestamp = timezone.now()
+        click.save()
+        return click
+
+    def get_timestamp(self, obj):
+        return obj.timestamp
 
 
 #######################################################################################################################
@@ -50,6 +61,7 @@ class BookmarkSerializer(serializers.HyperlinkedModelSerializer):
         return bookmark[0].click_num
 
     def create(self, validated_data):
+        """Automatically sets the short url code and the timestamp for a bookmark."""
         bookmark = Bookmark.objects.create(**validated_data)
         hashids = Hashids(salt="Hopefully the URLyBird does not get any worms")
         code = hashids.encode(bookmark.id)
