@@ -1,12 +1,4 @@
 from .settings import *
-import os
-
-SECRET_KEY = os.environ['SECRET_KEY']
-DEBUG = False
-
-APP_BLACKLIST = ['debug_toolbar', 'django_extensions']
-INSTALLED_APPS = tuple([app for app in INSTALLED_APPS
-                        if app not in APP_BLACKLIST])
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
@@ -19,4 +11,15 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+DEBUG = False
+
+SECRET_KEY = os.environ['SECRET_KEY']
