@@ -23,6 +23,7 @@ class ClickSerializer(serializers.ModelSerializer):
         click.save()
         return click
 
+
     def get_timestamp(self, obj):
         return obj.timestamp
 
