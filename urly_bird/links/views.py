@@ -57,7 +57,7 @@ class BookmarkRedirect(RedirectView):
                           bookmark=bookmark,
                           timestamp=timezone.now())
         else:
-            click = Click(user=User.objects.get(pk=103),
+            click = Click(user=User.objects.get(pk=2),
                           bookmark=bookmark,
                           timestamp=timezone.now())
         click.save()
